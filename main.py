@@ -113,10 +113,30 @@ async def criar_mecanico(
     db.commit()
     return RedirectResponse(url="/mecanicos", status_code=303)
 
+from sqlalchemy import extract, func
+
+# ... (outros imports)
+
 @app.get("/", response_class=HTMLResponse)
 async def read_dashboard(request: Request, db: Session = Depends(get_db)):
     maquinas = db.query(models.Maquina).all()
-    return templates.TemplateResponse(request, "dashboard.html", {"maquinas": maquinas})
+
+    # Busca custos agrupados por máquina para o mês atual
+    mes_atual = datetime.now().month
+    ano_atual = datetime.now().year
+
+    gastos = db.query(
+        models.Maquina.nome,
+        func.sum(models.Manutencao.custo_total).label("total")
+    ).join(models.Manutencao).filter(
+        extract('month', models.Manutencao.data) == mes_atual,
+        extract('year', models.Manutencao.data) == ano_atual
+    ).group_by(models.Maquina.nome).all()
+
+    return templates.TemplateResponse(request, "dashboard.html", {
+        "maquinas": maquinas,
+        "gastos": gastos
+    })
 
 @app.get("/manutencoes/{maquina_id}", response_class=HTMLResponse)
 async def read_manutencoes(maquina_id: int, request: Request, db: Session = Depends(get_db)):

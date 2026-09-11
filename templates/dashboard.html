@@ -1,20 +1,48 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1 class="mb-4">Painel de Frota</h1>
+<h1 class="mb-4">Painel de Frota - {{ datetime.now().strftime('%B/%Y') }}</h1>
+
 <div class="row">
-    {% for maquina in maquinas %}
-    <div class="col-md-4 mb-3">
+    <!-- Gráfico de Gastos -->
+    <div class="col-md-8">
+        <div class="card p-3 mb-4">
+            <h5 class="card-title">Gastos por Máquina (Mês Atual)</h5>
+            <canvas id="graficoGastos" height="100"></canvas>
+        </div>
+    </div>
+
+    <!-- Lista de Máquinas -->
+    <div class="col-md-4">
         <div class="card h-100">
             <div class="card-body">
-                <h5 class="card-title">{{ maquina.nome }}</h5>
-                <p class="card-text text-muted">{{ maquina.tipo }} - Série: {{ maquina.placa_serie }}</p>
-                <a href="/manutencoes/{{ maquina.id }}" class="btn btn-outline-primary w-100">
-                    <i class="bi bi-clock-history"></i> Histórico
+                <h5 class="card-title">Máquinas</h5>
+                {% for maquina in maquinas %}
+                <a href="/manutencoes/{{ maquina.id }}" class="btn btn-outline-primary w-100 mb-2">
+                    {{ maquina.nome }}
                 </a>
+                {% endfor %}
             </div>
         </div>
     </div>
-    {% endfor %}
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const ctx = document.getElementById('graficoGastos').getContext('2d');
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: [{% for g in gastos %}'{{ g.nome }}',{% endfor %}],
+            datasets: [{
+                label: 'Gasto Total (R$)',
+                data: [{% for g in gastos %}{{ g.total }},{% endfor %}],
+                backgroundColor: 'rgba(13, 110, 253, 0.6)',
+                borderColor: 'rgba(13, 110, 253, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: { scales: { y: { beginAtZero: true } } }
+    });
+</script>
 {% endblock %}
