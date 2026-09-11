@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1 class="mb-4">Máquinas</h1>
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <h2 class="h4 mb-3">Cadastrar Nova Máquina</h2>
+            <form action="/maquinas/criar" method="post">
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <input type="text" name="nome" class="form-control" placeholder="Nome (Ex: Escavadeira CAT)" required>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <input type="text" name="tipo" class="form-control" placeholder="Tipo (Ex: Retro)" required>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <input type="text" name="placa_serie" class="form-control" placeholder="Placa/Série" required>
+                    </div>
+                    <div class="col-md-2 mb-3 d-grid">
+                        <button type="submit" class="btn btn-primary"><i class="bi bi-plus-circle"></i> Salvar</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body p-0">
+            <table class="table table-hover mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Nome</th>
+                        <th>Tipo</th>
+                        <th>Série</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for m in maquinas %}
+                    <tr>
+                        <td>{{ m.nome }}</td>
+                        <td>{{ m.tipo }}</td>
+                        <td>{{ m.placa_serie }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

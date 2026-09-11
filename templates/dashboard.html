@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1 class="mb-4">Painel de Frota</h1>
+<div class="row">
+    {% for maquina in maquinas %}
+    <div class="col-md-4 mb-3">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">{{ maquina.nome }}</h5>
+                <p class="card-text text-muted">{{ maquina.tipo }} - Série: {{ maquina.placa_serie }}</p>
+                <a href="/manutencoes/{{ maquina.id }}" class="btn btn-outline-primary w-100">
+                    <i class="bi bi-clock-history"></i> Histórico
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1 class="mb-4">Histórico: {{ maquina.nome }}</h1>
+    <a href="/" class="btn btn-secondary mb-3"><i class="bi bi-arrow-left"></i> Voltar</a>
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <h2 class="h4 mb-3">Registrar Manutenção</h2>
+            <form action="/manutencao/criar" method="post">
+                <input type="hidden" name="maquina_id" value="{{ maquina.id }}">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Mecânico:</label>
+                        <select name="mecanico_id" class="form-select" required>
+                            {% for mecanico in mecanicos %}
+                            <option value="{{ mecanico.id }}">{{ mecanico.nome }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Tipo de Serviço:</label>
+                        <input type="text" name="tipo_servico" class="form-control" required>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Serviços Realizados (Descrição):</label>
+                    <textarea name="descricao" class="form-control" rows="3" required></textarea>
+                </div>
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Data:</label>
+                        <input type="date" name="data" class="form-control" required>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Horímetro:</label>
+                        <input type="number" step="0.1" name="horimetro" class="form-control" required>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Valor Total R$:</label>
+                        <input type="number" step="0.01" name="custo" class="form-control" required>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-success"><i class="bi bi-floppy"></i> Salvar Manutenção</button>
+            </form>
+        </div>
+    </div>
+
+    <h2 class="h4 mb-3">Manutenções Anteriores</h2>
+    <div class="card">
+        <div class="card-body p-0">
+            <table class="table table-hover mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Data</th>
+                        <th>Tipo</th>
+                        <th>Descrição</th>
+                        <th>Horímetro</th>
+                        <th>Valor R$</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for m in manutencoes %}
+                    <tr>
+                        <td>{{ m.data.strftime('%d/%m/%Y') }}</td>
+                        <td>{{ m.tipo_servico }}</td>
+                        <td>{{ m.descricao }}</td>
+                        <td>{{ m.horimetro_atual }}</td>
+                        <td>R$ {{ "%.2f"|format(m.custo_total) }}</td>
+                        <td>
+                            <a href="/imprimir_manutencao/{{ m.id }}" class="btn btn-sm btn-info" target="_blank"><i class="bi bi-file-earmark-pdf"></i></a>
+                            <a href="/manutencao/enviar_whatsapp/{{ m.id }}" class="btn btn-sm btn-success" target="_blank"><i class="bi bi-whatsapp"></i></a>
+                            <a href="/manutencao/excluir/{{ m.id }}" class="btn btn-sm btn-danger" onclick="return confirm('Tem certeza que deseja excluir esta manutenção?')"><i class="bi bi-trash"></i></a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
