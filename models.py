@@ -16,7 +16,7 @@ class Maquina(Base):
     status = Column(String(20), default="Ativa")          # Ativa / Em manutenção / Inativa
     criado_em = Column(DateTime, default=datetime.utcnow)
 
-    manutencoes = relationship("Manutencao", back_populates="maquina")
+    manutencoes = relationship("Manutencao", back_populates="maquina", cascade="all, delete-orphan")
 
 
 class Mecanico(Base):
