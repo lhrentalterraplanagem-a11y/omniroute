@@ -3,11 +3,11 @@ from fastapi.responses import HTMLResponse, RedirectResponse, FileResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
+from sqlalchemy import extract, func
 import database, models, relatorios
 from database import engine, get_db
 from datetime import datetime
 
-from sqlalchemy import extract
 # Create tables
 models.Base.metadata.create_all(bind=engine)
 
@@ -15,6 +15,8 @@ app = FastAPI()
 
 # Setup templates
 templates = Jinja2Templates(directory="templates")
+
+# --- ROTAS ---
 
 @app.get("/relatorios", response_class=HTMLResponse)
 async def pagina_relatorios(request: Request, db: Session = Depends(get_db)):
@@ -112,15 +114,9 @@ async def criar_mecanico(
     db.commit()
     return RedirectResponse(url="/mecanicos", status_code=303)
 
-from sqlalchemy import extract, func
-
-# ... (outros imports)
-
 @app.get("/", response_class=HTMLResponse)
 async def read_dashboard(request: Request, db: Session = Depends(get_db)):
     maquinas = db.query(models.Maquina).all()
-
-    # Busca custos agrupados por máquina para o mês atual
     mes_atual = datetime.now().month
     ano_atual = datetime.now().year
 
@@ -134,7 +130,8 @@ async def read_dashboard(request: Request, db: Session = Depends(get_db)):
 
     return templates.TemplateResponse(request, "dashboard.html", {
         "maquinas": maquinas,
-        "gastos": gastos
+        "gastos": gastos,
+        "datetime": datetime # Passando datetime pro template
     })
 
 @app.get("/manutencoes/{maquina_id}", response_class=HTMLResponse)
