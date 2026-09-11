@@ -49,15 +49,14 @@ async def imprimir_manutencao(manutencao_id: int, db: Session = Depends(get_db))
     arquivo_pdf = relatorios.gerar_pdf_manutencao(manutencao)
     return FileResponse(arquivo_pdf, media_type='application/pdf', filename=f"Manutencao_{manutencao_id}.pdf")
 
-@app.get("/manutencao/excluir/{manutencao_id}")
-async def excluir_manutencao(manutencao_id: int, db: Session = Depends(get_db)):
-    manutencao = db.query(models.Manutencao).filter(models.Manutencao.id == manutencao_id).first()
-    if manutencao:
-        maquina_id = manutencao.maquina_id
-        db.delete(manutencao)
+@app.get("/maquina/excluir/{maquina_id}")
+async def excluir_maquina(maquina_id: int, db: Session = Depends(get_db)):
+    maquina = db.query(models.Maquina).filter(models.Maquina.id == maquina_id).first()
+    if maquina:
+        db.delete(maquina)
         db.commit()
-        return RedirectResponse(url=f"/manutencoes/{maquina_id}", status_code=303)
-    raise HTTPException(status_code=404, detail="Manutenção não encontrada")
+        return RedirectResponse(url="/maquinas", status_code=303)
+    raise HTTPException(status_code=404, detail="Máquina não encontrada")
 
 @app.get("/manutencao/enviar_whatsapp/{manutencao_id}")
 async def enviar_whatsapp(manutencao_id: int, db: Session = Depends(get_db)):

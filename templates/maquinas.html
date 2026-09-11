@@ -8,7 +8,7 @@
             <h2 class="h4 mb-3">Cadastrar Nova Máquina</h2>
             <form action="/maquinas/criar" method="post">
                 <div class="row">
-                    <div class="col-md-4 mb-3">
+                    <div class="col-md-3 mb-3">
                         <input type="text" name="nome" class="form-control" placeholder="Nome (Ex: Escavadeira CAT)" required>
                     </div>
                     <div class="col-md-3 mb-3">
@@ -17,7 +17,7 @@
                     <div class="col-md-3 mb-3">
                         <input type="text" name="placa_serie" class="form-control" placeholder="Placa/Série" required>
                     </div>
-                    <div class="col-md-2 mb-3 d-grid">
+                    <div class="col-md-3 mb-3 d-grid">
                         <button type="submit" class="btn btn-primary"><i class="bi bi-plus-circle"></i> Salvar</button>
                     </div>
                 </div>
@@ -33,6 +33,7 @@
                         <th>Nome</th>
                         <th>Tipo</th>
                         <th>Série</th>
+                        <th>Ações</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -41,6 +42,9 @@
                         <td>{{ m.nome }}</td>
                         <td>{{ m.tipo }}</td>
                         <td>{{ m.placa_serie }}</td>
+                        <td>
+                            <a href="/maquina/excluir/{{ m.id }}" class="btn btn-sm btn-danger" onclick="return confirm('Tem certeza que deseja excluir esta máquina? Isso apagará todo o histórico de manutenção dela!')"><i class="bi bi-trash"></i></a>
+                        </td>
                     </tr>
                     {% endfor %}
                 </tbody>
