@@ -71,7 +71,6 @@ async def enviar_whatsapp(manutencao_id: int, db: Session = Depends(get_db)):
 👷 Mecânico: {manutencao.mecanico.nome}
 📅 Data: {manutencao.data.strftime('%d/%m/%Y')}
 ⏱️ Horímetro: {manutencao.horimetro_atual} horas
-💰 Custo Total: R$ {manutencao.custo_total:.2f}
 ━━━━━━━━━━━━━━━━━━━
 SERVIÇOS REALIZADOS:
 {manutencao.descricao}
